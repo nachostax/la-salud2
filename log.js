@@ -807,7 +807,7 @@ function renderLogTab() {
         </div>
       </div>`;
     }
-    return `<div class="meal-entry" onclick="openEntryDetail(${e.id})">
+    return `<div class="meal-entry" onclick="openEntryDetail(${e.id})" style="cursor:pointer">
       <div class="meal-entry-top">
         <span class="meal-name">${e.hypo_correction ? '🩸 ' : ''}${e.meal}</span>
         <button class="meal-delete" onclick="event.stopPropagation();deleteEntry(${e.id})">×</button>
