@@ -121,7 +121,7 @@ function showSec(name, el) {
 // is exactly what should happen since they never left Settings.
 // Also deliberately does NOT update lastSecName/SEC_ORDER bookkeeping —
 // that bookkeeping is only for the swipeable top-level tabs.
-const SUBSEC_TITLES = { settings:'Settings', profile:'Profile', targets:'Targets', history:'History', apikey:'API Key & Sync', notifications:'Notifications' };
+const SUBSEC_TITLES = { settings:'Settings', profile:'Profile', targets:'Targets', history:'History', apikey:'API Key & Sync', notifications:'Notifications', quicklog:'Quick Log Edits' };
 // Maps a sub-screen name to its actual DOM id, for the rare cases where they
 // differ — currently only 'history', whose div is sec-settings-history so it
 // doesn't collide with the bottom-nav Progress tab's sec-history.
@@ -149,14 +149,21 @@ function showSubSec(name, opts) {
   if (name === 'profile' || name === 'targets') renderMission();
   if (name === 'targets') {
     const sg = (S.settings && S.settings.stepGoal) || {};
+    const wg = (S.settings && S.settings.waterGoal) || {};
+    const wog = (S.settings && S.settings.workoutGoal) || {};
     ['gabi','nacho'].forEach(p => {
-      const el = document.getElementById('set-steps-'+p);
-      if (el && sg[p] != null) el.value = sg[p];
+      const stepEl = document.getElementById('set-steps-'+p);
+      if (stepEl && sg[p] != null) stepEl.value = sg[p];
+      const waterEl = document.getElementById('set-water-'+p);
+      if (waterEl && wg[p] != null) waterEl.value = wg[p];
+      const workEl = document.getElementById('set-workouts-'+p);
+      if (workEl && wog[p] != null) workEl.value = wog[p];
     });
   }
   if (name === 'history') renderHistory();
   if (name === 'settings') { currentSubSec = null; renderSettingsBody(); }
   if (name === 'apikey') renderApiKeyBody();
+  if (name === 'quicklog') renderQuickLogBody();
 
   // Determine push vs pop by checking whether we're going deeper or back.
   // Going to 'settings' is always a pop (back to root).
@@ -499,6 +506,13 @@ function setPerson(p) {
     nameGabi.className = 'psh-name ' + (p === 'gabi' ? 'psh-active-g' : 'psh-inactive');
     nameNacho.className = 'psh-name ' + (p === 'nacho' ? 'psh-active-n' : 'psh-inactive');
   }
+  // Also sync the settings-screen person toggle
+  const sNameGabi = document.getElementById('settings-psh-name-gabi');
+  const sNameNacho = document.getElementById('settings-psh-name-nacho');
+  if (sNameGabi && sNameNacho) {
+    sNameGabi.className = 'psh-name ' + (p === 'gabi' ? 'psh-active-g' : 'psh-inactive');
+    sNameNacho.className = 'psh-name ' + (p === 'nacho' ? 'psh-active-n' : 'psh-inactive');
+  }
   // Refresh solo-mode labels to show current person name
   refreshAIAssistModeSoloLabel();
   refreshHungryModeSoloLabel();
@@ -542,6 +556,13 @@ function saveTargets() {
     const el = document.getElementById('set-steps-'+p);
     const st = el ? parseFloat(el.value) : NaN;
     if (!isNaN(st)) S.settings.stepGoal[p] = st;
+    // Daily goals
+    const wEl = document.getElementById('set-water-'+p);
+    const woEl = document.getElementById('set-workouts-'+p);
+    const w = wEl ? parseFloat(wEl.value) : NaN;
+    const wo = woEl ? parseFloat(woEl.value) : NaN;
+    if (!isNaN(w)) S.settings.waterGoal[p] = w;
+    if (!isNaN(wo)) S.settings.workoutGoal[p] = wo;
   });
   saveMission();
 }
@@ -623,4 +644,3 @@ function groupEntriesByPersonDate(entries) {
   }
   return map;
 }
-
