@@ -224,7 +224,7 @@ function setLogMode(mode) {
 }
 
 // ── QUICK LOG: coffee & breakfast ─────────────────────────────────────────
-const QUICK_MEALS = {
+window.QUICK_MEALS = {
   coffee: {
     gabi:  { meal:'Coffee with milk', calories:30, protein_g:2, carbs_g:3, netcarbs_g:3, fat_g:1, fibre_g:0, magnesium_mg:8, vitd_mcg:0, iron_mg:0, calcium_mg:50, zinc_mg:0.1, b12_mcg:0.2, omega3_g:0, potassium_mg:80, vitc_mg:0, folate_mcg:2 },
     nacho: { meal:'Coffee with milk and honey', calories:55, protein_g:2, carbs_g:10, netcarbs_g:10, fat_g:1, fibre_g:0, magnesium_mg:8, vitd_mcg:0, iron_mg:0.1, calcium_mg:50, zinc_mg:0.1, b12_mcg:0.2, omega3_g:0, potassium_mg:90, vitc_mg:0, folate_mcg:2 }
@@ -238,6 +238,18 @@ const QUICK_MEALS = {
     nacho: { meal:'Vitamins', calories:18, protein_g:0.1, carbs_g:4.3, netcarbs_g:4.3, fat_g:0, fibre_g:0, magnesium_mg:175, vitd_mcg:2.1, iron_mg:0, calcium_mg:0, zinc_mg:1.5, b12_mcg:2.2, omega3_g:0, potassium_mg:0, vitc_mg:12, folate_mcg:83.3 }
   }
 };
+const QUICK_MEALS = window.QUICK_MEALS;
+
+// Apply saved overrides to QUICK_MEALS at startup
+function applyQuickLogOverrides() {
+  const overrides = S.settings && S.settings.quickLogOverrides;
+  if (!overrides) return;
+  ['gabi','nacho'].forEach(p => {
+    if (!overrides[p]) return;
+    if (overrides[p].coffee) QUICK_MEALS.coffee[p] = { ...QUICK_MEALS.coffee[p], ...overrides[p].coffee };
+    if (overrides[p].vitamins) QUICK_MEALS.multivitamins[p] = { ...QUICK_MEALS.multivitamins[p], ...overrides[p].vitamins };
+  });
+}
 
 function quickLogMeal(type) {
   const person = S.currentPerson;
@@ -820,4 +832,3 @@ function renderLogTab() {
   }).join('');
   if (showCongrats) launchConfetti();
 }
-
