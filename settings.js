@@ -18,23 +18,6 @@ function renderSettingsBody() {
   const s = S.settings;
   document.getElementById('settings-body').innerHTML = `
     <div class="trend-card">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:10px">Daily goals</div>
-      ${['gabi','nacho'].map(p => {
-        const label = p==='gabi'?'Gabi':'Nacho';
-        return `<div style="margin-bottom:12px">
-          <div style="font-size:12px;color:var(--mist);margin-bottom:4px">${label}</div>
-          <div style="display:flex;gap:6px;margin-bottom:4px">
-            <input type="number" id="set-water-${p}" value="${s.waterGoal[p]}" placeholder="ml" style="margin-bottom:0">
-            <span style="align-self:center;font-size:11px;color:var(--mist);white-space:nowrap">ml water/day</span>
-          </div>
-          <div style="display:flex;gap:6px">
-            <input type="number" id="set-workouts-${p}" value="${s.workoutGoal[p]}" placeholder="sessions" style="margin-bottom:0">
-            <span style="align-self:center;font-size:11px;color:var(--mist);white-space:nowrap">workouts/week</span>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-    <div class="trend-card">
       <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:10px">Usual low (hypo) correction</div>
       <div style="font-size:12px;color:var(--mist);margin-bottom:8px">What Gabi usually has for a low — this is just a label; the app doesn't calculate macros from it. Set the actual numbers below if it changes.</div>
       <input type="text" id="set-hypokit-gabi" value="${s.hypoKit.gabi||''}" placeholder="e.g. 2 cookies (~12.5g sugar)">
@@ -46,6 +29,125 @@ function renderSettingsBody() {
     </div>
     <button class="btn btn-primary" style="width:100%;margin-top:6px" onclick="saveSettings()">Save settings</button>
   `;
+}
+
+// ── QUICK LOG EDITS ────────────────────────────────────────────────────────
+function renderQuickLogBody() {
+  const p = S.currentPerson;
+  const qm = window.QUICK_MEALS || {};
+  const coffee = qm.coffee || {};
+  const vitamins = qm.multivitamins || {};
+  const s = S.settings;
+
+  document.getElementById('quicklog-body').innerHTML = `
+    ${p === 'nacho' ? `
+    <div class="trend-card">
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:6px">☕ Nacho's coffee</div>
+      <div style="font-size:12px;color:var(--mist);margin-bottom:10px">Adjust the quick-log coffee for Nacho. Toggle honey on/off or edit values directly.</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <label style="font-size:13px;color:var(--sand)">Include honey</label>
+        <input type="checkbox" id="ql-nacho-coffee-honey" ${(s.quickLogOverrides?.nacho?.coffeeHoney !== false) ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--nacho-c)">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div class="mfield" style="margin:0"><label style="font-size:10px">kcal</label><input type="number" id="ql-nacho-coffee-cal" value="${(s.quickLogOverrides?.nacho?.coffee?.calories) ?? coffee.nacho?.calories ?? 55}" style="margin:0"></div>
+        <div class="mfield" style="margin:0"><label style="font-size:10px">carbs g</label><input type="number" id="ql-nacho-coffee-carbs" value="${(s.quickLogOverrides?.nacho?.coffee?.carbs_g) ?? coffee.nacho?.carbs_g ?? 10}" style="margin:0"></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="saveQuickLogCoffee()">Save coffee</button>
+    </div>
+    ` : ''}
+
+    ${p === 'gabi' ? `
+    <div class="trend-card">
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:6px">🩸 Gabi's hypo correction</div>
+      <div style="font-size:12px;color:var(--mist);margin-bottom:10px">What Gabi usually has for a low — editable here and in Settings.</div>
+      <input type="text" id="ql-hypokit" value="${s.hypoKit?.gabi||''}" placeholder="e.g. 2 cookies (~12.5g sugar)" style="margin-bottom:8px">
+      <div style="display:flex;gap:6px">
+        <input type="number" id="ql-hypokcal" value="${s.hypoMacros?.gabi?.calories ?? 50}" placeholder="kcal" style="margin-bottom:0">
+        <input type="number" id="ql-hypocarbs" value="${s.hypoMacros?.gabi?.carbs_g ?? 13}" placeholder="carbs g" style="margin-bottom:0">
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="saveQuickLogHypo()">Save hypo correction</button>
+    </div>
+    ` : ''}
+
+    <div class="trend-card">
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:6px">💊 ${p === 'gabi' ? 'Gabi' : 'Nacho'}'s vitamins</div>
+      <div style="font-size:12px;color:var(--mist);margin-bottom:10px">Adjust the quick-log vitamins entry for ${p === 'gabi' ? 'Gabi' : 'Nacho'}.</div>
+      <div class="mfield" style="margin-bottom:8px"><label>Meal name / label</label><input type="text" id="ql-vit-name" value="${(s.quickLogOverrides?.[p]?.vitamins?.meal) ?? vitamins[p]?.meal ?? 'Vitamins'}"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div class="mfield" style="margin:0"><label style="font-size:10px">kcal</label><input type="number" id="ql-vit-cal" value="${(s.quickLogOverrides?.[p]?.vitamins?.calories) ?? vitamins[p]?.calories ?? 18}" style="margin:0"></div>
+        <div class="mfield" style="margin:0"><label style="font-size:10px">carbs g</label><input type="number" id="ql-vit-carbs" value="${(s.quickLogOverrides?.[p]?.vitamins?.carbs_g) ?? vitamins[p]?.carbs_g ?? 4.3}" style="margin:0"></div>
+        <div class="mfield" style="margin:0"><label style="font-size:10px">protein g</label><input type="number" id="ql-vit-protein" value="${(s.quickLogOverrides?.[p]?.vitamins?.protein_g) ?? vitamins[p]?.protein_g ?? 0}" step="0.1" style="margin:0"></div>
+        <div class="mfield" style="margin:0"><label style="font-size:10px">magnesium mg</label><input type="number" id="ql-vit-mag" value="${(s.quickLogOverrides?.[p]?.vitamins?.magnesium_mg) ?? vitamins[p]?.magnesium_mg ?? 175}" style="margin:0"></div>
+        <div class="mfield" style="margin:0"><label style="font-size:10px">vit D mcg</label><input type="number" id="ql-vit-vitd" value="${(s.quickLogOverrides?.[p]?.vitamins?.vitd_mcg) ?? vitamins[p]?.vitd_mcg ?? 2.1}" step="0.1" style="margin:0"></div>
+        <div class="mfield" style="margin:0"><label style="font-size:10px">B12 mcg</label><input type="number" id="ql-vit-b12" value="${(s.quickLogOverrides?.[p]?.vitamins?.b12_mcg) ?? vitamins[p]?.b12_mcg ?? 2.2}" step="0.1" style="margin:0"></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="saveQuickLogVitamins()">Save vitamins</button>
+    </div>
+  `;
+}
+
+function saveQuickLogCoffee() {
+  if (!S.settings.quickLogOverrides) S.settings.quickLogOverrides = {};
+  if (!S.settings.quickLogOverrides.nacho) S.settings.quickLogOverrides.nacho = {};
+  const hasHoney = document.getElementById('ql-nacho-coffee-honey').checked;
+  const cal = parseFloat(document.getElementById('ql-nacho-coffee-cal').value);
+  const carbs = parseFloat(document.getElementById('ql-nacho-coffee-carbs').value);
+  S.settings.quickLogOverrides.nacho.coffeeHoney = hasHoney;
+  S.settings.quickLogOverrides.nacho.coffee = {
+    meal: hasHoney ? 'Coffee with milk and honey' : 'Coffee with milk',
+    calories: isNaN(cal) ? (hasHoney ? 55 : 30) : cal,
+    protein_g: 2, carbs_g: isNaN(carbs) ? (hasHoney ? 10 : 3) : carbs,
+    netcarbs_g: isNaN(carbs) ? (hasHoney ? 10 : 3) : carbs,
+    fat_g: 1, fibre_g: 0, magnesium_mg: 8, vitd_mcg: 0, iron_mg: 0.1,
+    calcium_mg: 50, zinc_mg: 0.1, b12_mcg: 0.2, omega3_g: 0, potassium_mg: 90, vitc_mg: 0, folate_mcg: 2
+  };
+  // Apply override to the live QUICK_MEALS object
+  if (window.QUICK_MEALS) window.QUICK_MEALS.coffee.nacho = { ...S.settings.quickLogOverrides.nacho.coffee };
+  save();
+  showToast(hasHoney ? 'Coffee with honey saved ✓' : 'Coffee without honey saved ✓');
+}
+
+function saveQuickLogHypo() {
+  const desc = document.getElementById('ql-hypokit').value;
+  const cal = parseFloat(document.getElementById('ql-hypokcal').value);
+  const carbs = parseFloat(document.getElementById('ql-hypocarbs').value);
+  S.settings.hypoKit.gabi = desc;
+  if (!S.settings.hypoMacros) S.settings.hypoMacros = {};
+  S.settings.hypoMacros.gabi = { calories: isNaN(cal) ? 50 : cal, carbs_g: isNaN(carbs) ? 13 : carbs };
+  save();
+  syncHypoQuickBtn();
+  showToast('Hypo correction saved ✓');
+}
+
+function saveQuickLogVitamins() {
+  const p = S.currentPerson;
+  if (!S.settings.quickLogOverrides) S.settings.quickLogOverrides = {};
+  if (!S.settings.quickLogOverrides[p]) S.settings.quickLogOverrides[p] = {};
+  const name = document.getElementById('ql-vit-name').value.trim() || 'Vitamins';
+  const cal = parseFloat(document.getElementById('ql-vit-cal').value);
+  const carbs = parseFloat(document.getElementById('ql-vit-carbs').value);
+  const protein = parseFloat(document.getElementById('ql-vit-protein').value);
+  const mag = parseFloat(document.getElementById('ql-vit-mag').value);
+  const vitd = parseFloat(document.getElementById('ql-vit-vitd').value);
+  const b12 = parseFloat(document.getElementById('ql-vit-b12').value);
+  const vitOverride = {
+    meal: name,
+    calories: isNaN(cal) ? 18 : cal,
+    protein_g: isNaN(protein) ? 0.1 : protein,
+    carbs_g: isNaN(carbs) ? 4.3 : carbs,
+    netcarbs_g: isNaN(carbs) ? 4.3 : carbs,
+    fat_g: 0, fibre_g: 0,
+    magnesium_mg: isNaN(mag) ? 175 : mag,
+    vitd_mcg: isNaN(vitd) ? 2.1 : vitd,
+    iron_mg: 0, calcium_mg: 0,
+    zinc_mg: 1.5, b12_mcg: isNaN(b12) ? 2.2 : b12,
+    omega3_g: 0, potassium_mg: 0, vitc_mg: 12, folate_mcg: 83.3
+  };
+  S.settings.quickLogOverrides[p].vitamins = vitOverride;
+  // Apply override to the live QUICK_MEALS object
+  if (window.QUICK_MEALS) window.QUICK_MEALS.multivitamins[p] = { ...vitOverride };
+  save();
+  showToast('Vitamins updated ✓');
 }
 
 // ── API KEY & SYNC (moved out of the old single Settings screen) ───────────
@@ -103,12 +205,6 @@ function editGeminiKey() {
   document.getElementById('set-gemini-key').focus();
 }
 function saveSettings() {
-  ['gabi','nacho'].forEach(p => {
-    const w = parseFloat(document.getElementById('set-water-'+p).value);
-    const wo = parseFloat(document.getElementById('set-workouts-'+p).value);
-    if (!isNaN(w)) S.settings.waterGoal[p] = w;
-    if (!isNaN(wo)) S.settings.workoutGoal[p] = wo;
-  });
   S.settings.hypoKit.gabi = document.getElementById('set-hypokit-gabi').value;
   if (!S.settings.hypoMacros) S.settings.hypoMacros = {};
   S.settings.hypoMacros.gabi = {
@@ -555,6 +651,8 @@ function styleSheet(ws, rowCount) {
 
 init();
 backfillDailyTargets(); renderWeightHistories(); checkGeminiKeyHint();
+// Apply any saved quick-log overrides (e.g. Nacho's coffee without honey)
+if (typeof applyQuickLogOverrides === 'function') applyQuickLogOverrides();
 
 // ── RETROSPECTIVE DATE / TIME ──────────────────────────────────────────────
 function _openRetroRow(rowId, dateId, timeId) {
@@ -729,4 +827,3 @@ function toggleHistoryFullDay(person, date, checked) {
   renderHistory();
   showToast(checked ? 'Day marked complete ✓' : 'Full-day mark removed');
 }
-
