@@ -155,9 +155,10 @@ function showSec(name, el) {
     mainHeader.classList.toggle('header-tall', isTallTab);
   }
   if (isTallTab) {
+    const DISPLAY = { vitals: 'block', history: 'flex', log: 'flex' };
     ['vitals','history','log'].forEach(t => {
       const row = document.getElementById('hdr-toggle-' + t);
-      if (row) row.style.display = t === name ? 'flex' : 'none';
+      if (row) row.style.display = t === name ? DISPLAY[t] : 'none';
     });
   }
   if (name === 'kitchen') renderKitchen();
