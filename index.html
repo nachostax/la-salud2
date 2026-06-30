@@ -85,16 +85,6 @@
 <!-- VITALS (overview) -->
 <div id="sec-stage">
 <div id="sec-vitals" class="sec active">
-  <div id="vitals-top-panel">
-    <!-- Team C: set position:sticky; top:0; z-index:10; background:var(--bark); padding:10px 16px 8px on #vitals-top-panel -->
-    <div class="psh-date" id="hdr-date" style="text-align:center;font-size:22px;font-weight:600;margin-bottom:10px"></div>
-    <div class="seg">
-      <div class="seg-opt active" id="per-day" onclick="setPeriod('day')">Day</div>
-      <div class="seg-opt" id="per-week" onclick="setPeriod('week')">Week</div>
-      <div class="seg-opt" id="per-month" onclick="setPeriod('month')">Month</div>
-    </div>
-  </div>
-
   <div id="vitals-body"></div>
 
   <!-- AI ASSIST — the one action that stays in Vitals -->
@@ -143,12 +133,7 @@
     <span id="mark-complete-label">Mark day as complete</span>
   </button>
 
-  <!-- MEAL / WORKOUT MODE TOGGLE -->
-  <div class="seg" style="margin-bottom:14px">
-    <div class="seg-opt active" id="log-mode-meal" onclick="setLogMode('meal')">Meal</div>
-    <div class="seg-opt" id="log-mode-workout" onclick="setLogMode('workout')">Workout</div>
-    <div class="seg-opt" id="log-mode-water" onclick="setLogMode('water')">Water</div>
-  </div>
+  <!-- MEAL / WORKOUT MODE TOGGLE — moved to #hdr-toggle-log in #main-header -->
 
   <!-- ── MEAL MODE ── -->
   <div id="log-panel-meal">
@@ -606,7 +591,7 @@
 
 <!-- PROGRESS (bottom-nav tab) — trends & evolution, always expanded. The
      macro donut that used to live here moved to the Vitals "Today" card. -->
-<div id="sec-history" class="sec" style="padding:calc(96px + env(safe-area-inset-top)) 16px 20px">
+<div id="sec-history" class="sec" style="padding-left:16px;padding-right:16px;padding-bottom:20px">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
     <button onclick="openHistoryFromProgress()"
       style="flex:1;padding:12px;background:var(--bark);color:var(--sand);
@@ -635,8 +620,10 @@
 
 </div><!-- /sec-stage -->
 
-<!-- TOP HEADER — person toggle row only -->
-<div id="main-header">
+<!-- TOP HEADER — person toggle row, plus a second row (only shown on
+     Vitals/Progress/Log, via #main-header.header-tall) holding whichever
+     period/mode toggle belongs to the active tab. -->
+<div id="main-header" class="header-tall">
   <div id="person-subhdr">
     <!-- Sync dot — absolute top-right, independent of layout flow -->
     <div class="psh-sync" id="sync-status" onclick="retryCloudSync()" style="cursor:pointer;color:#888">●</div>
@@ -661,7 +648,35 @@
       </div>
     </div>
   </div>
+
+  <!-- ROW 2: per-tab toggle row, only one shown at a time (display toggled
+       by showSec() in ui.js based on the active tab). -->
+  <div id="hdr-tab-row">
+    <div class="psh-date" id="hdr-date"></div>
+
+    <!-- VITALS: Day / Week / Month -->
+    <div class="seg hdr-tab-toggle" id="hdr-toggle-vitals">
+      <div class="seg-opt active" id="per-day" onclick="setPeriod('day')">Day</div>
+      <div class="seg-opt" id="per-week" onclick="setPeriod('week')">Week</div>
+      <div class="seg-opt" id="per-month" onclick="setPeriod('month')">Month</div>
+    </div>
+
+    <!-- PROGRESS: Week / Month / Year -->
+    <div class="seg hdr-tab-toggle" id="hdr-toggle-history" style="display:none">
+      <div class="seg-opt" id="prog-per-week" onclick="setProgressPeriod('week')">Week</div>
+      <div class="seg-opt active" id="prog-per-month" onclick="setProgressPeriod('month')">Month</div>
+      <div class="seg-opt" id="prog-per-year" onclick="setProgressPeriod('year')">Year</div>
+    </div>
+
+    <!-- LOG: Meal / Workout / Water (moved here from inside #sec-log) -->
+    <div class="seg hdr-tab-toggle" id="hdr-toggle-log" style="display:none">
+      <div class="seg-opt active" id="log-mode-meal" onclick="setLogMode('meal')">Meal</div>
+      <div class="seg-opt" id="log-mode-workout" onclick="setLogMode('workout')">Workout</div>
+      <div class="seg-opt" id="log-mode-water" onclick="setLogMode('water')">Water</div>
+    </div>
+  </div>
 </div>
+
 
 <!-- BOTTOM TAB BAR — order: Vitals, Progress, Log (center), Kitchen, Workout.
      Settings has moved to the header (top-right, below the sync dot) and is
