@@ -55,7 +55,7 @@ function renderTargetsBody() {
         <div class="dot" style="background:${color}"></div>${name}
       </div>
 
-      <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:13px;letter-spacing:1px;color:var(--mist);text-transform:uppercase;margin:14px 0 10px">Calorie Target</div>
+      <div style="font-family:'Baloo 2',sans-serif;font-weight:600;font-size:13px;letter-spacing:1px;color:var(--mist);text-transform:uppercase;margin:14px 0 10px">Calorie Target</div>
 
       <div class="mfield">
         <label>3-month goal (this drives your calorie target)</label>
@@ -65,7 +65,7 @@ function renderTargetsBody() {
         <label>1-year goal weight</label>
         <select id="${pfx}-goal1y"></select>
       </div>
-      <div id="${pfx}-calc-breakdown" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mist);margin:8px 0;line-height:1.6"></div>
+      <div id="${pfx}-calc-breakdown" style="font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--mist);margin:8px 0;line-height:1.6"></div>
       <button type="button" class="btn btn-save" style="width:100%;margin-bottom:14px" onclick="calculateMyIntake('${p}')">Calculate Calories</button>
       <div id="${pfx}-ai-assist-wrap"><!-- AI Assist injected by calculateMyIntake --></div>
 
@@ -76,39 +76,39 @@ function renderTargetsBody() {
       <div class="mfield"><label>Steps target</label><input type="number" id="set-steps-${p}" value="${m.stepsTarget||''}" placeholder="10000"></div>
     </div>
 
-    <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:13px;letter-spacing:1px;color:var(--mist);text-transform:uppercase;margin:18px 0 10px">Daily &amp; Weekly Targets</div>
+    <div style="font-family:'Baloo 2',sans-serif;font-weight:600;font-size:13px;letter-spacing:1px;color:var(--mist);text-transform:uppercase;margin:18px 0 10px">Daily &amp; Weekly Targets</div>
 
     <div class="mfield" style="margin-bottom:8px">
       <label>Daily water (ml)</label>
       <input type="number" id="set-water-${p}" value="${water}" placeholder="${p==='gabi'?'1750':'2000'}">
     </div>
 
-    <div style="font-size:12px;color:var(--mist);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin:10px 0 6px">Cardio</div>
+    <div style="font-size:12px;color:var(--mist);font-family:'Space Grotesk',sans-serif;letter-spacing:1px;margin:10px 0 6px">Cardio</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
       <div class="mfield" style="margin:0"><label style="font-size:10px">Sessions/week</label><input type="number" id="set-cardio-sessions-${p}" value="${cardioSessions}" placeholder="3"></div>
       <div class="mfield" style="margin:0"><label style="font-size:10px">Minutes each</label><input type="number" id="set-cardio-mins-${p}" value="${cardioMins}" placeholder="30"></div>
     </div>
 
-    <div style="font-size:12px;color:var(--mist);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin:0 0 6px">HIIT <span style="font-size:10px;opacity:0.7">(VO₂MAX)</span></div>
+    <div style="font-size:12px;color:var(--mist);font-family:'Space Grotesk',sans-serif;letter-spacing:1px;margin:0 0 6px">HIIT <span style="font-size:10px;opacity:0.7">(VO₂MAX)</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
       <div class="mfield" style="margin:0"><label style="font-size:10px">Sessions/week</label><input type="number" id="set-hiit-sessions-${p}" value="${hiitSessions}" placeholder="1"></div>
       <div class="mfield" style="margin:0"><label style="font-size:10px">Minutes each</label><input type="number" id="set-hiit-mins-${p}" value="${hiitMins}" placeholder="30"></div>
     </div>
 
-    <div style="font-size:12px;color:var(--mist);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin:0 0 6px">Strength</div>
+    <div style="font-size:12px;color:var(--mist);font-family:'Space Grotesk',sans-serif;letter-spacing:1px;margin:0 0 6px">Strength</div>
     <div class="mfield" style="margin-bottom:10px">
       <label style="font-size:10px">Sessions/week</label>
       <input type="number" id="set-strength-sessions-${p}" value="${strengthSessions}" placeholder="3">
     </div>
 
-    <div style="font-size:12px;color:var(--mist);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin:0 0 6px">Mobility</div>
+    <div style="font-size:12px;color:var(--mist);font-family:'Space Grotesk',sans-serif;letter-spacing:1px;margin:0 0 6px">Mobility</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
       <div class="mfield" style="margin:0"><label style="font-size:10px">Sessions/week</label><input type="number" id="set-mobility-sessions-${p}" value="${mobilitySessions}" placeholder="5"></div>
       <div class="mfield" style="margin:0"><label style="font-size:10px">Minutes each</label><input type="number" id="set-mobility-mins-${p}" value="${mobilityMins}" placeholder="15"></div>
     </div>
 
     <button class="btn btn-save" style="width:100%;margin-top:6px" onclick="saveTargets()">Save</button>
-    <div id="mission-saved" style="display:none;text-align:center;padding:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--sage);letter-spacing:2px;margin-top:6px">SAVED</div>
+    <div id="mission-saved" style="display:none;text-align:center;padding:10px;font-family:'Space Grotesk',sans-serif;font-size:11px;color:var(--sage);letter-spacing:2px;margin-top:6px">SAVED</div>
   `;
 
   // Re-populate goal dropdowns now that the elements exist in the DOM.
@@ -193,7 +193,7 @@ function renderQuickLogBody() {
   document.getElementById('quicklog-body').innerHTML = `
     ${p === 'nacho' ? `
     <div class="trend-card">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:6px">☕ Nacho's coffee</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:15px;margin-bottom:6px">☕ Nacho's coffee</div>
 
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
         <label style="font-size:13px;color:var(--sand)">Include honey</label>
@@ -209,7 +209,7 @@ function renderQuickLogBody() {
 
     ${p === 'gabi' ? `
     <div class="trend-card">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:6px">🩸 Gabi's hypo correction</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:15px;margin-bottom:6px">🩸 Gabi's hypo correction</div>
 
       <input type="text" id="ql-hypokit" value="${s.hypoKit?.gabi||''}" placeholder="e.g. 2 cookies (~12.5g sugar)" style="margin-bottom:8px">
       <div style="display:flex;gap:6px">
@@ -221,7 +221,7 @@ function renderQuickLogBody() {
     ` : ''}
 
     <div class="trend-card">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:6px">💊 ${p === 'gabi' ? 'Gabi' : 'Nacho'}'s vitamins</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:15px;margin-bottom:6px">💊 ${p === 'gabi' ? 'Gabi' : 'Nacho'}'s vitamins</div>
 
       <div class="mfield" style="margin-bottom:8px"><label>Meal name / label</label><input type="text" id="ql-vit-name" value="${(s.quickLogOverrides?.[p]?.vitamins?.meal) ?? vitamins[p]?.meal ?? 'Vitamins'}"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
@@ -306,9 +306,9 @@ function renderApiKeyBody() {
   const hasGeminiKeySaved = !!localStorage.getItem('gemini_api_key');
   document.getElementById('apikey-body').innerHTML = `
     <div class="trend-card">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:10px">Automatic food sorting</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:15px;margin-bottom:10px">Automatic food sorting</div>
 
-      <div id="gemini-key-saved-view" class="themed-soil-box" style="display:${hasGeminiKeySaved?'flex':'none'};align-items:center;justify-content:space-between;border:1px solid var(--sage);border-radius:3px;padding:9px 11px">
+      <div id="gemini-key-saved-view" class="themed-soil-box" style="display:${hasGeminiKeySaved?'flex':'none'};align-items:center;justify-content:space-between;padding:9px 11px">
         <span style="font-size:13px;color:var(--sage)">✓ Key saved on this device</span>
         <button type="button" class="btn btn-secondary weight-log-btn" onclick="editGeminiKey()">Change</button>
       </div>
@@ -318,20 +318,20 @@ function renderApiKeyBody() {
       </div>
     </div>
     <div class="trend-card">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:10px">Storage migration</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:15px;margin-bottom:10px">Storage migration</div>
       <div id="migrate-status" style="font-size:13px;color:var(--mist);margin-bottom:8px"></div>
       <button class="btn btn-secondary" id="migrate-btn" onclick="runStorageMigration()">Storage migration (checking…)</button>
     </div>
     <div class="trend-card">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:10px">Backup & recovery</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:15px;margin-bottom:10px">Backup & recovery</div>
 
       <label class="file-btn">
         Restore from CSV
         <input type="file" accept=".csv,text/csv" onchange="restoreFromCSV(event)">
       </label>
     </div>
-    <div class="trend-card" style="border-color:var(--terra)">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:10px;color:var(--terra)">Migrate data</div>
+    <div class="trend-card">
+      <div style="font-family:'Space Grotesk',sans-serif;font-style:italic;font-size:15px;margin-bottom:10px;color:var(--terra)">Migrate data</div>
 
       <button class="btn btn-secondary" onclick="copyMigrationBundle()">Copy migration bundle</button>
       <button class="btn btn-secondary" onclick="exportMigrationBundle()" style="margin-top:8px">Download migration bundle (.txt)</button>
@@ -555,7 +555,7 @@ function clearRetroDateWk() {
 function renderHistory() {
   const el = document.getElementById('history-content');
   if (!cloudReady) {
-    if (el) el.innerHTML = '<div style="color:var(--mist);font-size:12px;font-family:\'JetBrains Mono\',monospace;letter-spacing:1px;padding:20px 0">⟳&nbsp;Syncing…</div>';
+    if (el) el.innerHTML = '<div style="color:var(--mist);font-size:12px;font-family:\'Space Grotesk\',sans-serif;letter-spacing:1px;padding:20px 0">⟳&nbsp;Syncing…</div>';
     return;
   }
   // Remember which day panels are currently open so a re-render (e.g. after
@@ -599,7 +599,7 @@ function renderHistory() {
         const label = mealTypeLabel[e.meal_type] || '';
         const name = e.meal || e.name || '—';
         return `<div style="display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--bark);cursor:pointer" onclick="openEntryDetail(${e.id})">
-          <div>${label?`<span style="font-size:10px;color:var(--mist);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-right:5px">${label.toUpperCase()}</span>`:''}<span style="font-size:12px;color:var(--sand)">${name}</span></div>
+          <div>${label?`<span style="font-size:10px;color:var(--mist);font-family:'Space Grotesk',sans-serif;letter-spacing:1px;margin-right:5px">${label.toUpperCase()}</span>`:''}<span style="font-size:12px;color:var(--sand)">${name}</span></div>
           <span style="display:flex;align-items:center;flex-shrink:0;margin-left:8px">
             <span style="font-size:11px;color:var(--mist)">${e.calories?Math.round(e.calories)+' kcal':''}</span>
             <button class="meal-delete" onclick="event.stopPropagation();deleteHistoryEntry(${e.id})" title="Delete entry">×</button>
