@@ -1,0 +1,75 @@
+/* ════════════════════════════════════════════════════════════════════════
+   LOG FAB ANIMATION — standalone, independent module.
+   To remove entirely: delete this file's <link> tag and log-fab-anim.js's
+   <script> tag from index.html. Nothing else references these classes.
+
+   Behaviour:
+   1. Tapping the "+" (Log tab) spawns a plain circle overlay (NOT the SVG
+      icon itself) that expands to cover the screen while fading out on its
+      own slower timeline — so it visibly "fills" before disappearing.
+   2. The "+" icon stays on top of that overlay at all times (highest layer).
+   3. The Log section (#sec-log) is forced to fade+lift in instead of the
+      normal left/right slide used by every other tab. This only overrides
+      #sec-log — every other tab keeps the original slide untouched.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Expanding circle overlay ── */
+#log-fab-overlay {
+  position: fixed;
+  border-radius: 50%;
+  background: var(--ochre, #C8863A);
+  pointer-events: none;
+  z-index: 9998; /* below the + icon, above everything else */
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0.35;
+  will-change: transform, opacity;
+}
+body.person-gabi #log-fab-overlay { background: var(--gabi-moon-bright, #6BA3C8); }
+
+/* Two independent timelines on the SAME element via two separately-timed
+   animations: scale finishes faster (~0.6s), opacity fade runs the full
+   ~1s so the circle is visibly still "there" filling the screen as it
+   fades, instead of vanishing the instant it's full-size. Peak opacity is
+   capped well below solid (0.35) so it reads as a soft wash, not a wall
+   of color. */
+@keyframes logFabExpand {
+  from { transform: translate(-50%, -50%) scale(0); }
+  to   { transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes logFabFade {
+  0%   { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+#log-fab-overlay.log-fab-run {
+  animation:
+    logFabExpand 0.6s cubic-bezier(0.2,0,0.2,1) forwards,
+    logFabFade   1s   linear forwards;
+}
+
+/* ── 2. "+" icon always sits above the overlay ── */
+.bnav-log-icon {
+  position: relative;
+  z-index: 9999;
+}
+
+/* ── 3. Log section: fade + lift instead of slide ──
+   showSec() (ui.js) still adds .sec-out-left/right / .sec-in-left/right
+   to drive the slide on every tab — we don't touch that logic. Here we
+   simply override what those classes animate, ONLY for #sec-log, with a
+   more specific selector. No JS coordination with ui.js required. */
+#sec-log.sec-in-left,
+#sec-log.sec-in-right {
+  animation: logSecFadeIn 0.45s cubic-bezier(0.2,0,0.2,1) forwards !important;
+}
+#sec-log.sec-out-left,
+#sec-log.sec-out-right {
+  animation: logSecFadeOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards !important;
+}
+@keyframes logSecFadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes logSecFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(18px); }
+}

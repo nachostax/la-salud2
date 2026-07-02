@@ -1,0 +1,114 @@
+/* ════════════════════════════════════════════════════════════════════════
+   ANIM.CSS — all JS-triggered animations live here, in one place.
+   Pairs with anim.js, which contains the JS logic that adds/removes the
+   classes these keyframes key off of.
+
+   Sections:
+     1. Person switch — sec-stage slide (triggered by togglePerson in anim.js)
+     2. Log FAB overlay — expanding circle on tapping "+" (triggered by
+        the FAB tap listener in anim.js)
+     3. Log section entrance — fade+lift override for #sec-log specifically
+        (every other tab's slide is handled by showSec() in ui.js and is
+        NOT touched by this file)
+
+   Static/structural CSS (colors, layout, theming) stays in style.css.
+   Only transient, JS-driven animation keyframes belong here.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. PERSON SWITCH SLIDE — #sec-stage ──
+   Classes are added/removed by togglePerson() in anim.js. Base layout
+   (position, z-index) for #sec-stage lives in style.css since it's
+   structural, not animation-specific. */
+#sec-stage.person-slide-out {
+  animation: personSlideOut 0.5s cubic-bezier(.4,0,.6,1) forwards;
+}
+#sec-stage.person-slide-in {
+  animation: personSlideIn 0.55s cubic-bezier(.2,.8,.4,1) forwards;
+}
+@keyframes personSlideOut {
+  from { transform: translateY(0);     opacity: 1; }
+  to   { transform: translateY(-55px); opacity: 0; }
+}
+@keyframes personSlideIn {
+  from { transform: translateY(45px);  opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+/* ── 2. LOG FAB OVERLAY — expanding circle on tapping "+" ──
+   Spawned/removed by anim.js. Independent feature: if you want to remove
+   just the FAB circle effect, delete this section plus the
+   spawnLogFabOverlay()/initLogFabAnim() functions in anim.js — nothing
+   else in the app calls into them. */
+#log-fab-overlay {
+  position: fixed;
+  border-radius: 50%;
+  background: var(--ochre, #C8863A);
+  pointer-events: none;
+  z-index: 9998; /* below the + icon, above everything else */
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0.35;
+  will-change: transform, opacity;
+}
+body.person-gabi #log-fab-overlay { background: var(--gabi-moon-bright, #6BA3C8); }
+
+/* Two independent timelines on the SAME element via two separately-timed
+   animations. The circle's target size is capped in JS to roughly 65% of
+   the distance to the viewport edge, and the fade finishes BEFORE the
+   expand does (0.5s fade vs 0.6s expand, both starting immediately) — so
+   well before the circle would reach the screen edge it has already
+   dissolved away, instead of growing edge-to-edge while still visible.
+   Peak opacity is capped well below solid (0.35) so it reads as a soft
+   wash, not a wall of color. */
+@keyframes logFabExpand {
+  from { transform: translate(-50%, -50%) scale(0); }
+  to   { transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes logFabFade {
+  0%   { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+#log-fab-overlay.log-fab-run {
+  animation:
+    logFabExpand 0.6s cubic-bezier(0.2,0,0.2,1) forwards,
+    logFabFade   0.5s linear forwards;
+}
+
+/* "+" icon always sits above the overlay */
+.bnav-log-icon {
+  position: relative;
+  z-index: 9999;
+}
+
+/* ── 3. LOG SECTION ENTRANCE — fade + lift instead of slide ──
+   showSec() (ui.js) still adds .sec-out-left/right / .sec-in-left/right
+   to drive the slide on every tab — we don't touch that logic in ui.js.
+   Here we simply override what those classes animate, ONLY for #sec-log,
+   with a more specific selector. No JS coordination required beyond what
+   showSec() already does.
+   The in-animation is slowed (0.45s → 0.8s) and given a short delay
+   (0.25s) so the section visibly appears later, after the FAB overlay
+   has had time to dissolve, rather than popping in immediately. */
+#sec-log.sec-in-left,
+#sec-log.sec-in-right {
+  animation: logSecFadeIn 0.8s cubic-bezier(0.2,0,0.2,1) 0.25s forwards !important;
+  opacity: 0; /* hold hidden during the delay before the animation starts */
+}
+#sec-log.sec-out-left,
+#sec-log.sec-out-right {
+  animation: logSecFadeOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards !important;
+}
+@keyframes logSecFadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes logSecFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(18px); }
+}
+
+/* ── 4. PROGRESS TAB — period switch dot/curve transition ──
+   Real per-point movement now lives in setProgressPeriod() (progress.js),
+   which slides each dot (matched by date) from its old pixel position to
+   its new one via inline transform, and crossfades the curve/fill. See
+   that function for details — nothing declarative needed here beyond
+   dots/curve being normal elements with no conflicting transitions. */
