@@ -308,7 +308,7 @@ function renderApiKeyBody() {
     <div class="trend-card">
       <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:10px">Automatic food sorting</div>
 
-      <div id="gemini-key-saved-view" class="themed-soil-box" style="display:${hasGeminiKeySaved?'flex':'none'};align-items:center;justify-content:space-between;background:var(--soil);border:1px solid var(--sage);border-radius:3px;padding:9px 11px">
+      <div id="gemini-key-saved-view" class="themed-soil-box" style="display:${hasGeminiKeySaved?'flex':'none'};align-items:center;justify-content:space-between;border:1px solid var(--sage);border-radius:3px;padding:9px 11px">
         <span style="font-size:13px;color:var(--sage)">✓ Key saved on this device</span>
         <button type="button" class="btn btn-secondary weight-log-btn" onclick="editGeminiKey()">Change</button>
       </div>

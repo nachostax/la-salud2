@@ -870,7 +870,7 @@ function renderPotatesHero() {
     bdr('Logging quality', bd.logPts, 10, bd.logDays > 0 ? bd.logDays + ' day' + (bd.logDays!==1?'s':'') + ' logged' : 'nothing yet') +
     (bd.availableMax < 100 ? '<div style="font-size:10px;color:var(--mist);margin-top:6px;font-style:italic">Score scaled to available data (' + bd.availableMax + '/100 pts active)</div>' : '') +
     '</div></div>';
-  return `<div class="day-card potates-score-card" style="border-color:var(--ochre);margin-bottom:10px">
+  return `<div class="day-card potates-score-card" style="margin-bottom:10px">
     <div class="day-card-body" style="text-align:center;padding:10px 16px 8px">
       <div class="box-title" style="text-align:left">Potates Score</div>
       <div style="font-family:'JetBrains Mono',monospace;font-size:18px;letter-spacing:3px;color:${scoreColor};opacity:0.85;margin-bottom:4px;text-transform:uppercase;transition:color .4s">${statusLabel}</div>

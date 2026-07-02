@@ -2253,7 +2253,8 @@ body.person-gabi .restore-title { color: var(--gabi-moon-bright) !important; }
 /* ── POTATES SCORE BREAKDOWN ARROW ── */
 body.person-gabi .pbd-arr.open { border-color: var(--gabi-moon-bright); }
 body.person-gabi .pbd-pts      { color: var(--gabi-moon-bright); }
-body.person-gabi .potates-score-card  { border-color: var(--gabi-moon-glow) !important; }
+.potates-score-card { border-color: var(--ochre); }
+body.person-gabi .potates-score-card  { border-color: var(--gabi-moon-glow); }
 body.person-gabi .potates-score-label { color: var(--gabi-moon-bright) !important; }
 
 /* ── INPUTS / TEXTAREAS / SELECTS ── */
@@ -2427,7 +2428,8 @@ body.person-gabi .themed-dashed-field {
 body.person-gabi .themed-dashed-field { border-style: dashed !important; }
 body.person-gabi .themed-field:focus,
 body.person-gabi .themed-dashed-field:focus { border-color: var(--gabi-moon-glow) !important; }
-body.person-gabi .themed-soil-box { background: var(--gabi-moon-deep) !important; }
+.themed-soil-box { background: var(--soil); }
+body.person-gabi .themed-soil-box { background: var(--gabi-moon-deep); }
 
 /* ── INLINE BUTTON OVERRIDES (buttons written with style="…color:var(--ochre)…") ──
    These are the small "👫 log both" circular buttons and similar —
